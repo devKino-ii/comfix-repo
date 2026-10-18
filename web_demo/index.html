@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#F3F5F9"><title>ComFix | Morong</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="styles.css">
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script defer src="map-provider.js"></script><script defer src="app.js"></script></head>
+<body>
+<main id="authView" class="auth">
+  <section class="poster" aria-label="ComFix">
+    <svg class="poster-map" viewBox="0 0 640 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect width="640" height="800" fill="#E8EEF8"/>
+      <path d="M640 430C560 440 500 520 450 610S330 800 280 800H640Z" fill="#BBD2F2"/>
+      <g fill="#F8FAFD"><rect x="30" y="90" width="170" height="120" rx="16"/><rect x="250" y="60" width="130" height="150" rx="16"/><rect x="430" y="90" width="180" height="110" rx="16"/><rect x="40" y="290" width="140" height="130" rx="16"/><rect x="250" y="290" width="130" height="150" rx="16"/><rect x="60" y="520" width="150" height="130" rx="16"/><rect x="260" y="500" width="110" height="120" rx="16"/></g>
+      <rect x="450" y="290" width="150" height="110" rx="16" fill="#D3E9D5"/>
+      <g stroke="#fff" stroke-width="20" fill="none" stroke-linecap="round"><path d="M-10 250H650"/><path d="M-10 470H560"/><path d="M225 -10V800"/><path d="M410 -10V560"/></g>
+      <path class="route" pathLength="1" d="M-10 600C100 560 180 640 260 520S420 330 650 380" fill="none" stroke="#FCC419" stroke-width="12" stroke-linecap="round"/>
+      <g transform="translate(225 250)"><circle class="pulse" r="10" fill="#1B3FA0"/><g class="pin" style="--d:.7s"><path d="M0 0C-16-20-26-31-26-46a26 26 0 0 1 52 0C26-31 16-20 0 0Z" fill="#FCC419" stroke="#0E1A33" stroke-width="3"/><circle cy="-46" r="9" fill="#0E1A33"/></g></g>
+      <g transform="translate(410 470)"><g class="pin" style="--d:.95s"><path d="M0 0C-16-20-26-31-26-46a26 26 0 0 1 52 0C26-31 16-20 0 0Z" fill="#FCC419" stroke="#0E1A33" stroke-width="3"/><circle cy="-46" r="9" fill="#0E1A33"/></g></g>
+      <g transform="translate(120 470)"><g class="pin" style="--d:1.2s"><path d="M0 0C-16-20-26-31-26-46a26 26 0 0 1 52 0C26-31 16-20 0 0Z" fill="#FCC419" stroke="#0E1A33" stroke-width="3"/><circle cy="-46" r="9" fill="#0E1A33"/></g></g>
+      <g transform="translate(520 250)"><g class="pin" style="--d:1.45s"><path d="M0 0C-16-20-26-31-26-46a26 26 0 0 1 52 0C26-31 16-20 0 0Z" fill="#1D8A4F" stroke="#0E1A33" stroke-width="3"/><path d="M-8-46l6 6 11-12" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>
+    </svg>
+    <div class="brand"><img class="brand-mark" src="brand-mark.svg" alt=""><span><b>ComFix</b><small>Morong, Rizal</small></span></div>
+    <div class="ticket" aria-hidden="true"><div class="t-head"><b>CF-014</b><span class="t-cycle"><i>New</i><i>Verified</i><i>In progress</i><i>Resolved</i></span></div><p>Large pothole near the school</p><span class="t-track"><i></i></span></div>
+    <div class="poster-copy"><h1>See a problem in Morong? Report it.</h1><p>Neighbours back it up. The office fixes it. You see every step.</p></div>
+  </section>
+  <section class="auth-panel">
+    <div class="role-tabs" data-role="citizen" role="tablist" aria-label="Account type"><button id="tabCitizen" type="button" role="tab" aria-selected="true">Resident</button><button id="tabAdmin" type="button" role="tab" aria-selected="false">Office staff</button></div>
+    <div class="form">
+      <h2 id="authTitle">Welcome back</h2><p id="authDescription" class="sub"></p>
+    </div>
+    <form id="authForm" class="form">
+      <label>Username<input id="username" autocomplete="username" minlength="3" maxlength="32" required></label>
+      <label>Password<span class="pw"><input id="password" type="password" autocomplete="current-password" minlength="8" required><button id="pwToggle" class="link" type="button" aria-label="Show password">Show</button></span></label>
+      <label id="staffField" hidden>Staff code<input id="staffCode" autocomplete="off"><small>Ask the community office for this code.</small></label>
+      <p id="authError" class="error" role="alert"></p>
+      <button id="authSubmit" class="btn primary" type="submit">Sign in</button>
+    </form>
+    <p class="auth-foot"><span id="authPrompt">New to ComFix?</span> <button id="authSwitch" class="link" type="button">Create a resident account</button></p>
+  </section>
+</main>
+
+<div id="appView" class="shell" hidden>
+  <aside class="rail">
+    <div class="brand"><img class="brand-mark" src="brand-mark.svg" alt=""><span><b>ComFix</b><small>Morong, Rizal</small></span></div>
+    <nav class="nav" aria-label="Main">
+      <button data-view="feed" class="active"><span class="ico">▤</span><span class="lbl">Feed</span><b id="navCount" class="count"></b></button>
+      <button data-view="map"><span class="ico">◎</span><span class="lbl">Map</span></button>
+      <button data-view="mine" class="only-citizen"><span class="ico">☰</span><span class="lbl">My reports</span></button>
+      <button data-view="fixed"><span class="ico">✓</span><span class="lbl">Fixed</span></button>
+    </nav>
+    <button id="newReport" class="btn sun only-citizen" type="button">+ Report a problem</button>
+    <div class="me"><button id="meBtn" class="me-btn" type="button" title="Open your profile"><span id="avatar" class="avatar"></span><span><b id="meName"></b><small id="meRole"></small></span></button><button class="link" data-signout type="button">Sign out</button></div>
+  </aside>
+
+  <main class="stage">
+    <button id="meMobile" class="avatar me-mobile" type="button" aria-label="Open your profile"></button>
+    <header id="bar" class="bar"><h1 id="pageTitle"></h1><p id="pageSub"></p></header>
+    <section id="feedView" class="view">
+      <div id="dash" class="dash" hidden></div><div id="tools" class="tools" hidden></div>
+      <div id="composer" class="composer"><span class="avatar sm">+</span><button id="composerBtn" type="button">What's happening in Morong?</button><span class="chip-photo">Add photo</span></div>
+      <div id="feedList" class="feed"></div>
+      <p id="empty" class="empty" hidden>Nothing here yet.</p>
+    </section>
+    <section id="mapView" class="view mapview" hidden><div id="mapList" class="maplist"></div><div id="mainMap" class="bigmap" aria-label="Map of reports"></div></section>
+    <section id="profileView" class="view" hidden>
+      <form id="profileForm" class="form profile">
+        <label>Full name<input id="pName" maxlength="80" required></label>
+        <label>Address in the community<input id="pAddress" maxlength="120" placeholder="Street or purok, barangay" required></label>
+        <label>Phone number <span class="opt">optional</span><input id="pPhone" type="tel" maxlength="20" placeholder="09XX XXX XXXX"></label>
+        <p class="note">Neighbours only see your first name. The office sees your name, address and phone so it can reach you about your reports. Nothing else is collected.</p>
+        <p id="profileError" class="error" role="alert"></p>
+        <button class="btn primary" type="submit">Save profile</button>
+        <button class="link signout-mobile" data-signout type="button">Sign out</button>
+      </form>
+    </section>
+    <aside id="detail" class="detail" hidden aria-label="Report details"></aside>
+  </main>
+</div>
+
+<dialog id="reportDialog" class="dialog">
+  <form id="reportForm" method="dialog" class="form">
+    <header><h2>What needs attention?</h2><button id="closeDialog" class="x" type="button" aria-label="Close">×</button></header>
+    <fieldset class="cat-field"><legend>What kind of problem is it?</legend><div id="catChips" class="chips"></div><select id="reportCategory" hidden></select></fieldset>
+    <label>How serious is it? <output id="severityValue" for="reportSeverity">3 / 5</output><input id="reportSeverity" type="range" min="1" max="5" value="3"></label>
+    <label>What is happening?<textarea id="reportText" rows="3" minlength="8" maxlength="500" placeholder="Describe the problem and where it is." required></textarea></label>
+    <label>Photo <span class="opt">optional</span><input id="reportPhoto" type="file" accept="image/*"></label><img id="photoPreview" class="preview" alt="Selected photo" hidden>
+    <div class="loc"><div><b>Location</b> <span class="opt">optional</span><small id="selectedLocation">Tap the map to drop a pin.</small></div><button id="clearPin" class="link" type="button" hidden>Clear pin</button></div>
+    <div id="reportMap" class="pickmap"></div>
+    <p id="reportError" class="error" role="alert"></p>
+    <footer><button id="cancelReport" class="btn ghost" type="button">Cancel</button><button class="btn primary" type="submit">Send report</button></footer>
+  </form>
+</dialog>
+<dialog id="logoutDialog" class="dialog small"><div class="form"><h2>Sign out of ComFix?</h2><p class="note">You will need to sign in again to send or review reports.</p><footer><button id="stayBtn" class="btn ghost" type="button">Stay signed in</button><button id="confirmLogout" class="btn primary" type="button">Sign out</button></footer></div></dialog>
+<section id="printSheet" class="print-sheet"></section>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body></html>
