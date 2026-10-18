@@ -1,0 +1,6 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "deploy": {
+    "startCommand": "COMFIX_HOST=0.0.0.0 COMFIX_PORT=$PORT python comfix_web_demo.py"
+  }
+}
